@@ -1,0 +1,64 @@
+* Requirements Understanding
+Introduction
+
+-> important elements to be modelled and omit others to reduce complexity, while still obtaining information that helps understanding the system's behaviour.
+
+--> our focus is on simulating an on-demand public transport system. 
+
+-->
+
+Entity:
+-------
+
+Passenger:
+- desired pickup time: number
+- departure station: number
+- destination station: number
+--> customer can choose pick-up locations among a list of bus stops and desired departure times, as well as their destinations stops. 
+--> The time between requests and the delay between a request and its corresponding pick-up time are chosen by sampling exponentially distributed random variables with given means.
+--> the source and target stops for each request are chosen uniformly at random.
+--> All of the above are identically distributed.
+
+
+
+MiniBus:
+- total current passenger
+- maximum passenger
+- number of seats that are empty
+- the route of the passengers
+
+--> each bus will station at the last stop or at the garage when not in service and will be scheduled once identified as the nearest to newly placed user requests.
+--> scheduled periodically, as new requests enter the system. 
+--> Their capacity in terms of maximum number of passengers 
+
+
+Route Planning:
+--> planning decisions will be made based on configurable user waiting time limits, and the differences between the time requests are placed and the desired departure time.
+--> when do we choose to schedule a minibus?
+--> a route of a minubus that is already in service can be updated to accommodate a new request as long as this will not alter previously agreed departure times.
+--> For a planned journey, you must ensure that the minibus occupancy is not exceeded at any time.
+
+
+Service Network:
+--> The service network comprises a specified number of bus stops and the travel distances between each one of them and its neighbours, expressed in minutes.
+
+
+Simulation:
+- simulation time
+- state
+- events
+--> when determining the set of events that may occur after the current state, each of these will have an associated delay.
+
+
+Algorithm:
+----------
+
+time <- 0
+while time <= max_time do
+ determine the set of events that may occur after the current sstate
+ delay <- choose a delay based on the nearest event
+ time <- time + delay
+ modify the state of the system based on the current event
+end while
+
+

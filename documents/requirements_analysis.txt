@@ -20,7 +20,6 @@ Passenger:
 --> All of the above are identically distributed.
 
 
-
 MiniBus:
 - total current passenger
 - maximum passenger
@@ -61,4 +60,63 @@ while time <= max_time do
  modify the state of the system based on the current event
 end while
 
+Command Line Arguments:
+-----------------------
+- one of the argument is the name of the input script that describes your simulation.
+- You can optionally add other parameters e.g. for logging purposes or to allow disabling detailed output when repeating the simulations with different values of a certain input.
+--> The application you will be develop is to be executed at the system console and should accept command-line arguments.
+
+Input format:
+-------------
+busCapacity <unsigned int>
+boardingTime <unsigned int>
+requestRate <float>
+pickupInterval <float>
+maxDelay <unsigned int>
+noBuses <unsigned int
+noStops <unsigned int>
+map
+0 <int> <int> ... <int>
+
+<int> 0  <int> ... <int>
+
+.  .  . ... ....... <..>
+
+<int> <int> <int> ... 0
+
+stopTime <float>
+
+Output Formatting:
+------------------
+
+--> Each event will be output on a single line in the following format: <time> --> <event> <details>.
+--> we will output time in the format days:hours:minutes:seconds.
+--> You must account for the following events:
+- new journey request scheduled / can not be accommodated
+- minibus left / arrived at location
+- passenger boarded / disembark
+- minibus occupancy changed
+
+
+Statistics Analysis:
+--------------------
+* Average Trip Duration
+--> average duration of trips performed by a minibus over the duration of the simulation.
+--> report it in this format: average trip duration <average duration (minutes:seconds)>
+
+* Trip Efficiency
+--> number of passengers transported per unit of travel time. For this purpose you will need to trace for each route the duration, as well as the minibus occupancy between boarding and disembarkation events. 
+--> display as follow: trip efficiency <average occupancy per time unit (passengers aboard per minute)>
+
+* Percentage of Missed Requests
+--> count the number of instances a new request cannot be served within the maximum admissible delay fo the desired departures time. 
+--> display as follow: percentage of missed requests <fraction of missed over total requests>
+
+* Average Waiting Time
+--> A minibus with passengers already travelling may often be required to wait at a stop for a new user to arrive and board, which is another aspect that impacts customer satisfaction. Thus, we will report the average duration a passenger waits on board (except for boarding and disembarkation of others) during a journey.
+--> output as follow: average passenger waiting time <average duration waiting at stops during a trip> seconds
+
+* Average Trip Deviation
+--> Finally, we are interested in monitoring how much a journey deviates from the shortest path from a passenger's departure point to their intended destination. For this purpose we will compute for each passenger the difference between the total time of the shortest path and the actual duration that passenger is actually spending on a bus.
+--> following format: average trip deviation < sum of differences between shortest and actual trips over trip count>
 

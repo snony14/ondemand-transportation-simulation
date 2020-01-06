@@ -119,4 +119,3 @@ Statistics Analysis:
 * Average Trip Deviation
 --> Finally, we are interested in monitoring how much a journey deviates from the shortest path from a passenger's departure point to their intended destination. For this purpose we will compute for each passenger the difference between the total time of the shortest path and the actual duration that passenger is actually spending on a bus.
 --> following format: average trip deviation < sum of differences between shortest and actual trips over trip count>
-

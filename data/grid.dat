@@ -1,0 +1,10 @@
+busCapacity 13
+boardingTime 10
+requestRate 20.0
+pickupInterval 15.0
+maxDelay 10
+noBuses 10
+noStops 6
+map
+#TODO need some stuff here
+stopTime 48

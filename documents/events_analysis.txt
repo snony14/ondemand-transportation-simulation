@@ -1,0 +1,57 @@
+time <- 0
+while time <= max_time do
+ determine the set of events that may occur after the current sstate
+ delay <- choose a delay based on the nearest event
+ time <- time + delay
+ modify the state of the system based on the current event
+end while
+
+Events for next request
+|-|--|-------|---|
+
+Events for bus 1
+--|--|-----|----|---|--|---|
+
+
+the one who performs the event is the one that is going to handle it
+
+
+the bus has a set of events it has to perform:
+
+* disembark --> print bus capacity? After each disembark?
+* board --> print bus capacity? After each board?
+* arrived 
+* leave
+
+The constraints is time regarding boarding here which implies some ordering:
+Future scheduling:
+-> b--b---b---b-bb-b--b
+
+Current state:
+-> al---a-d-b
+two lists: satisfied and not satisfied 
+#
+
+########### we have route separate thing: we want to see from the bus state whether we can satisfy the constraints
+given bus state, and possible board, calculate new state, new state depends on our heuristics
+
+===> heuristics(oldBusState, newBoard) returns a new busState
+
+* How do we define a bus state?
+A sequence of events that the bus has to perform in order to satisfy its constraints
+
+- A (t:5) - D (15) - D (30) - B (45) - L (45) - A  
+
+Those onboard also has a constraint: time, which state how long they have been in the bus:
+->
+
+scheduling for a bus is also difficult:
+* when are we going to schedule a particular request?
+
+We start with the easiest one and then proceed with the most difficult one?
+
+----
+
+Implement the request, minibus, and then the event, 
+finally implement the route planner: following some heuristics. From there, let's see how we can proceed. 
+

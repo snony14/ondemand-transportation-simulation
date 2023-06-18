@@ -1,5 +1,5 @@
 
-print("Hello Momom")
+print("Hello Momo")
 busCapacity = "busCapacity"
 
 inputDict = dict()
@@ -43,6 +43,8 @@ def readFile(fileName):
     validateInt('noStops', inputDict['noStops'], "s")
     # validate map
     validateInt('stopTime', inputDict['stopTime'], "s")
+
+    return inputDict
 
 
 def validateInt(name, content=[], check='b'):

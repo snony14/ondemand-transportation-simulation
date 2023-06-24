@@ -1,4 +1,3 @@
-
 print("Hello Momo")
 busCapacity = "busCapacity"
 
@@ -18,8 +17,8 @@ def readFile(fileName):
     wb = open("../data/basic_input.txt", "r")
     # parse input and save it into dictionary
     for line in wb:
-        splitted_line = line.split()
-        fst = splitted_line[0]
+        split_line = line.split()
+        fst = split_line[0]
         valid = False
         if len(fst) > 1 and fst[0] != '#':
             valid = True
@@ -27,11 +26,10 @@ def readFile(fileName):
             valid = True
 
         if valid and fst in inputDict:
-            inputDict[fst] = splitted_line[1:]
+            inputDict[fst] = split_line[1:]
         elif valid and inputDict['map'] != False and inputDict['stopTime'] == False:
-            inputDict['map'].append(splitted_line)
+            inputDict['map'].append(split_line)
     wb.close()
-    print(inputDict)
     # validate inputs or throw an error
     # try  and catch and then throw
     validateInt('busCapacity', inputDict['busCapacity'], "s")

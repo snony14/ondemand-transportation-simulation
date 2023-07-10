@@ -1,7 +1,7 @@
 from enum import Enum
-from request import Request
+from request import Request, generate_random, get_pickup_time, get_next_time_to_generate_req
 from typing import List
-from output import get_formatted_time
+import datetime
 
 
 class EventEnum(Enum):
@@ -12,6 +12,7 @@ class EventEnum(Enum):
     BUS_LEAVE = 5
     WAIT = 6
     NOOP = 7
+    GENERATE_REQ = 8
 
 
 class Event:
@@ -20,8 +21,11 @@ class Event:
         self.event_type = event_type
         self.event_time = event_time
 
+    def set_event_time(self, new_event_time: int):
+        self.event_time = new_event_time
+
     def __str__(self):
-        return "Event: %s, time: %s" % (self.event_type, get_formatted_time(self.event_time))
+        return "Event: %s, time: %s" % (self.event_type, str(datetime.timedelta(seconds=self.event_time)))
 
     def __repr__(self):
         return repr(self.__str__())
@@ -32,6 +36,7 @@ class EventAction:
         self.event = Event(event_type, time)
         self.current_station: int = 0
         self.on_board: List[Request] = []
+        self.scheduled_requests: List[Request] = []
         self.disembark = None
 
     def set_current_station(self, current_station: int):
@@ -55,10 +60,28 @@ class EventAction:
         self.event.event_time = t
 
     def __str__(self):
-        return "%s station %s" % (self.event.__repr__(),  self.current_station)
+        return "%s station %s on board: %s" % (self.event.__repr__(), self.current_station, str(self.on_board))
 
     def __repr__(self):
         return repr(self.__str__())
 
 
+class RequestEvent:
 
+    def __init__(self):
+        self.event = Event(EventEnum.GENERATE_REQ, 0)
+
+    def get_request(self, current_time: int):
+        src = generate_random(1, 5)
+        dst = generate_random(1, 5)
+        while src == dst:
+            dst = generate_random(1, 5)
+        desired_pickup_time = current_time + get_pickup_time() * 60
+        return Request(src, dst, int(desired_pickup_time))
+
+    def get_event_time(self):
+        return self.event.event_time
+
+    def generate_next_event(self, current_time: int):
+        next_time = get_next_time_to_generate_req()*60
+        self.event.set_event_time(int(next_time) + current_time)

@@ -45,6 +45,26 @@ def get_path(prev: List[List[int]], i: int, j: int):
 distance, previous = floyd_warshall(test_network)
 
 
+def get_path2(i: int, j: int):
+    if previous[i][j] is None:
+        return []
+    path = [j]
+    while i != j:
+        j = previous[i][j]
+        path.append(j)
+    path.reverse()
+    return path
+
+
+def get_total_distance(path: List[int]):
+    start = 0
+    dist = 0
+    for i in range(1, len(path)):
+        dist += distance[start][i]
+        start = i
+    return dist
+
+
 def generate_event_actions(start_event: EventAction, goal: EventEnum, req: Request):
     src = start_event.current_station
     dst = req.src if goal == EventEnum.BOARDING else req.dst
@@ -62,9 +82,13 @@ def generate_event_actions(start_event: EventAction, goal: EventEnum, req: Reque
             if len(disembark) > 0:
                 current_event = generate_disembark_event(current_event, disembark)
                 event_lst.append(current_event)
+                if req == disembark[0]:
+                    done = True
             elif req.src == current_event.current_station:
                 current_event = generate_boarding_event(current_event, req)
                 event_lst.append(current_event)
+                if current_event.get_event_type() == EventEnum.BOARDING:
+                    done = True
             else:
                 current_event = generate_leave_event(current_event)
                 event_lst.append(current_event)
@@ -73,15 +97,25 @@ def generate_event_actions(start_event: EventAction, goal: EventEnum, req: Reque
             if len(disembark) > 0:
                 current_event = generate_disembark_event(current_event, disembark)
                 event_lst.append(current_event)
+                if req == disembark[0]:
+                    done = True
             elif req.src == current_event.current_station:
                 current_event = generate_boarding_event(current_event, req)
                 event_lst.append(current_event)
+                if current_event.get_event_type() == EventEnum.BOARDING:
+                    done = True
             else:
                 current_event = generate_leave_event(current_event)
                 event_lst.append(current_event)
         elif event_type == EventEnum.BOARDING:
-            current_event = generate_leave_event(current_event)
-            event_lst.append(current_event)
+            if dst == current_event.current_station:
+                current_event = generate_boarding_event(current_event, req)
+                event_lst.append(current_event)
+                if current_event.get_event_type() == EventEnum.BOARDING:
+                    done = True
+            else:
+                current_event = generate_leave_event(current_event)
+                event_lst.append(current_event)
         elif event_type == EventEnum.BUS_LEAVE:
             if pos < len(paths):
                 current_event = generate_arrive_event(pos, current_event, paths)
@@ -126,8 +160,9 @@ def generate_disembark_event(current_event: EventAction, disembark: List[Request
 def generate_boarding_event(current_event: EventAction, req: Request):
     new_event_action = None
     event_time = current_event.get_event_time()
-    if event_time <= req.desired_pickup_time:
-        new_time = req.desired_pickup_time if event_time < req.desired_pickup_time else req.desired_pickup_time + test_boarding_time
+    # print(event_time <= req.scheduled_pickup_time, current_event, req)
+    if event_time <= req.scheduled_pickup_time:
+        new_time = req.scheduled_pickup_time if event_time < req.scheduled_pickup_time else req.desired_pickup_time + test_boarding_time
         new_event_action = EventAction(EventEnum.BOARDING, new_time)
         new_event_action.on_board = [r for r in current_event.on_board]
         new_event_action.set_board(req)
@@ -141,6 +176,23 @@ def get_longest_on_board_passenger(on_board: List[Request], station: int):
     reqs = [req for req in on_board if req.dst == station]
     return sorted(reqs, key=lambda req: req.scheduled_pickup_time)
 
+
+def get_journey_data(journeys: List[EventAction]):
+    board = 0
+    disembark = 0
+    for journey in journeys:
+        if journey.get_event_type() == EventEnum.BOARDING:
+            board += 1
+
+        if journey.get_event_type() == EventEnum.DISEMBARK:
+            disembark += 1
+    waiting_time = 0
+    initial_journey = journeys[0]
+    for journey in journeys[1:]:
+        if journey.get_event_type() == EventEnum.BOARDING:
+            waiting_time += journey.get_event_time() - initial_journey.get_event_time()
+        initial_journey = journey
+    return board, disembark, waiting_time
 
 # pick up 10:00, on_board = [], current station = 0, event: leave, time: 09:50
 # req1 = Request(2, 5, 10 * 60 * 60)

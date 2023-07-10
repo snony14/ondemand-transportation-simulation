@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
 
     def test_from_board_event_to_board(self):
         on_board = [Request(2, 5, 2*60), Request(3, 5, 15*60)]
-        event_action = EventAction(EventEnum.BUS_LEAVE, 0)
+        event_action = EventAction(EventEnum.BOARDING, 2*60)
         event_action.set_current_station(0)
         event_action.set_board(on_board[0])
         journey = generate_event_actions(event_action, EventEnum.BOARDING, on_board[1])

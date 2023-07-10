@@ -193,31 +193,3 @@ def get_journey_data(journeys: List[EventAction]):
             waiting_time += journey.get_event_time() - initial_journey.get_event_time()
         initial_journey = journey
     return board, disembark, waiting_time
-
-# pick up 10:00, on_board = [], current station = 0, event: leave, time: 09:50
-# req1 = Request(2, 5, 10 * 60 * 60)
-# event_action = EventAction(EventEnum.BUS_LEAVE, 9*3600+50*60)
-# print(generate_event_actions(event_action, EventEnum.BOARDING, req1))
-
-# pick up 10:00, on_board = [], current station = 0, event: leave, time: 09:55
-# event_action = EventAction(EventEnum.BUS_LEAVE, 9*3600+54*60)
-# print(generate_event_actions(event_action, EventEnum.BOARDING, req1))
-# req2 = Request(3, 5)
-# req2.set_desired_pickup_time(90)
-# req2.set_scheduled_pickup_time(95)
-
-# requests = [req1, req2]
-# results = get_longest_on_board_passenger(requests, 5)
-# print(results[0], results[1])
-
-# event_action = EventAction(EventEnum.BUS_LEAVE, 0)
-# req = Request(5, 2)
-# req.set_scheduled_pickup_time(12)
-
-# req2 = Request(3, 1)
-# req2.set_desired_pickup_time(90)
-# req2.set_scheduled_pickup_time(95)
-
-# event_action.set_board(req)
-# event_action.set_board(req2)
-# print(generate_event_actions(event_action, EventEnum.BOARDING, req1))

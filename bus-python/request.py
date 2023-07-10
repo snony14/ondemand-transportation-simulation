@@ -1,9 +1,10 @@
 from random import randint, seed, random
-import time
 import math
+from output import get_formatted_time
+from datetime import datetime
 
 
-def generateRandom(low=1, high=5):
+def generate_random(low=1, high=5):
     return randint(low, high)
 
 
@@ -12,37 +13,47 @@ Be careful with the time, is it in seconds or min etc...
 '''
 
 
-def getPickupTime(pickupInterval=30):
-    seed(int(time.time()))
+def get_pickup_time(pickup_interval=30):
+    seed(datetime.now().timestamp())
     rand_value = random()
     while rand_value == 0:
-        seed(int(time.time()))
+        seed(datetime.now().timestamp())
         rand_value = random()
-    desiredPickUpTime = (-1)*pickupInterval*math.log(rand_value)
-    return desiredPickUpTime
+    return (-1)*pickup_interval*math.log(rand_value)
 
 
-def getNextTimeToGenerateReq(mean=30):
-    seed(int(time.time()))
+def get_next_time_to_generate_req(mean=30):
+    seed(datetime.now().timestamp())
     rand_value = random()
     while rand_value == 0:
-        seed(int(time.time()))
+        seed(datetime.now().timestamp())
         rand_value = random()
     rate = 1 / mean
-    nextTimeToGenerateReq = -(math.log(rand_value))*rate
-    return nextTimeToGenerateReq
+    return -(math.log(rand_value))*rate
 
 
 class Request:
 
-    def __init__(self, src, dst):
+    def __init__(self, src: int, dst: int, desired_pickup_time: int):
         self.src = src
         self.dst = dst
-        self.desiredPickupTime = 0
-        self.shortestPathTime = 0
+        self.scheduled_pickup_time = desired_pickup_time
+        self.desired_pickup_time = desired_pickup_time
+        self.is_truly_scheduled = False
+        self.id = 0
 
-    def setDesiredPickupTime(self, newPickupTime):
-        self.desiredPickupTime = newPickupTime
+    def set_scheduled_pickup_time(self, new_pickup_time):
+        self.scheduled_pickup_time = new_pickup_time
 
-    def setShortestPathTime(self, shortestPathTime):
-        self.shortestPathTime = shortestPathTime
+    def set_is_truly_scheduled(self, done: bool):
+        self.is_truly_scheduled = done
+
+    def set_id(self, new_id: int):
+        self.id = new_id
+
+    def __str__(self):
+        return "(%s-%s) time: %s id: %s" % (self.src, self.dst, get_formatted_time(self.scheduled_pickup_time), self.id)
+
+    def __repr__(self):
+        return repr(self.__str__())
+
